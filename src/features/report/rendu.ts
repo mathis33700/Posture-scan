@@ -6,7 +6,7 @@ import {
   type PositionsPoints,
 } from '@/lib/annotation-render';
 import { chargerImage } from '@/lib/image';
-import type { VuePosturale } from '@/types/database';
+import type { VuePosturale } from '@/types/domaine';
 
 /** Largeur du rendu destiné au PDF : au-delà, le fichier grossit pour rien. */
 const LARGEUR_RENDU = 900;

@@ -4,7 +4,7 @@ import { usePraticienId } from '@/features/auth/useAuth';
 import { preparerPhoto } from '@/lib/image';
 import { cheminPhoto, urlsSignees } from '@/lib/storage';
 import { BUCKET_PHOTOS, supabase } from '@/lib/supabase';
-import type { Cliche, VuePosturale } from '@/types/database';
+import type { Cliche, VuePosturale } from '@/types/domaine';
 
 export const VUES: VuePosturale[] = ['face', 'dos', 'profil'];
 

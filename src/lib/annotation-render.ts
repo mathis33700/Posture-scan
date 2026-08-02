@@ -1,6 +1,6 @@
 import type { PointPixels } from './geometry';
 import { BASE_FIL_A_PLOMB, SEGMENTS_PAR_VUE } from './points-catalog';
-import type { VuePosturale } from '@/types/database';
+import type { VuePosturale } from '@/types/domaine';
 
 export type PositionsPoints = Map<string, { x: number; y: number }>;
 

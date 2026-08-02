@@ -15,7 +15,7 @@ import { usePatient } from '@/features/patients/hooks';
 import { usePraticien } from '@/features/praticien/usePraticien';
 import { cn } from '@/lib/cn';
 import { formaterDate } from '@/lib/format';
-import type { Bilan, VuePosturale } from '@/types/database';
+import type { Bilan, VuePosturale } from '@/types/domaine';
 
 type Affichage = 'cote-a-cote' | 'superposition';
 

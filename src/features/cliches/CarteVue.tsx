@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Chargement';
-import type { Cliche, VuePosturale } from '@/types/database';
+import type { Cliche, VuePosturale } from '@/types/domaine';
 
 import { LIBELLE_VUE } from './hooks';
 

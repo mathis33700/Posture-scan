@@ -1,186 +1,426 @@
-/**
- * Types de la base Posture Scan.
- *
- * Ce fichier suit la forme produite par `supabase gen types typescript` et doit
- * être régénéré après toute migration :
- *
- *   npx supabase gen types typescript --project-id <ref> > src/types/database.ts
- */
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
-
-export type VuePosturale = 'face' | 'dos' | 'profil';
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.15"
+  }
   public: {
     Tables: {
-      praticiens: {
-        Row: {
-          id: string;
-          email: string;
-          nom: string;
-          cabinet: string;
-          echelle_px_par_cm: number | null;
-          cree_le: string;
-          maj_le: string;
-        };
-        Insert: {
-          id: string;
-          email: string;
-          nom?: string;
-          cabinet?: string;
-          echelle_px_par_cm?: number | null;
-        };
-        Update: {
-          email?: string;
-          nom?: string;
-          cabinet?: string;
-          echelle_px_par_cm?: number | null;
-        };
-        Relationships: [];
-      };
-      patients: {
-        Row: {
-          id: string;
-          praticien_id: string;
-          nom: string;
-          prenom: string;
-          date_naissance: string | null;
-          notes: string;
-          cree_le: string;
-          maj_le: string;
-        };
-        Insert: {
-          id?: string;
-          praticien_id: string;
-          nom: string;
-          prenom: string;
-          date_naissance?: string | null;
-          notes?: string;
-        };
-        Update: {
-          nom?: string;
-          prenom?: string;
-          date_naissance?: string | null;
-          notes?: string;
-        };
-        Relationships: [];
-      };
       bilans: {
         Row: {
-          id: string;
-          praticien_id: string;
-          patient_id: string;
-          date_bilan: string;
-          notes: string;
-          cree_le: string;
-          maj_le: string;
-        };
+          cree_le: string
+          date_bilan: string
+          id: string
+          maj_le: string
+          notes: string
+          patient_id: string
+          praticien_id: string
+        }
         Insert: {
-          id?: string;
-          praticien_id: string;
-          patient_id: string;
-          date_bilan?: string;
-          notes?: string;
-        };
+          cree_le?: string
+          date_bilan?: string
+          id?: string
+          maj_le?: string
+          notes?: string
+          patient_id: string
+          praticien_id: string
+        }
         Update: {
-          date_bilan?: string;
-          notes?: string;
-        };
-        Relationships: [];
-      };
+          cree_le?: string
+          date_bilan?: string
+          id?: string
+          maj_le?: string
+          notes?: string
+          patient_id?: string
+          praticien_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bilans_patient_id_praticien_id_fkey"
+            columns: ["patient_id", "praticien_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id", "praticien_id"]
+          },
+          {
+            foreignKeyName: "bilans_praticien_id_fkey"
+            columns: ["praticien_id"]
+            isOneToOne: false
+            referencedRelation: "praticiens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cliches: {
         Row: {
-          id: string;
-          praticien_id: string;
-          bilan_id: string;
-          vue: VuePosturale;
-          photo_path: string;
-          image_largeur: number;
-          image_hauteur: number;
-          cree_le: string;
-          maj_le: string;
-        };
+          bilan_id: string
+          cree_le: string
+          id: string
+          image_hauteur: number
+          image_largeur: number
+          maj_le: string
+          photo_path: string
+          praticien_id: string
+          vue: Database["public"]["Enums"]["vue_posturale"]
+        }
         Insert: {
-          id?: string;
-          praticien_id: string;
-          bilan_id: string;
-          vue: VuePosturale;
-          photo_path: string;
-          image_largeur: number;
-          image_hauteur: number;
-        };
+          bilan_id: string
+          cree_le?: string
+          id?: string
+          image_hauteur: number
+          image_largeur: number
+          maj_le?: string
+          photo_path: string
+          praticien_id: string
+          vue: Database["public"]["Enums"]["vue_posturale"]
+        }
         Update: {
-          photo_path?: string;
-          image_largeur?: number;
-          image_hauteur?: number;
-        };
-        Relationships: [];
-      };
-      points: {
-        Row: {
-          id: string;
-          praticien_id: string;
-          cliche_id: string;
-          code_point: string;
-          x: number;
-          y: number;
-          maj_le: string;
-        };
-        Insert: {
-          id?: string;
-          praticien_id: string;
-          cliche_id: string;
-          code_point: string;
-          x: number;
-          y: number;
-        };
-        Update: {
-          x?: number;
-          y?: number;
-        };
-        Relationships: [];
-      };
+          bilan_id?: string
+          cree_le?: string
+          id?: string
+          image_hauteur?: number
+          image_largeur?: number
+          maj_le?: string
+          photo_path?: string
+          praticien_id?: string
+          vue?: Database["public"]["Enums"]["vue_posturale"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cliches_bilan_id_praticien_id_fkey"
+            columns: ["bilan_id", "praticien_id"]
+            isOneToOne: false
+            referencedRelation: "bilans"
+            referencedColumns: ["id", "praticien_id"]
+          },
+          {
+            foreignKeyName: "cliches_praticien_id_fkey"
+            columns: ["praticien_id"]
+            isOneToOne: false
+            referencedRelation: "praticiens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mesures: {
         Row: {
-          id: string;
-          praticien_id: string;
-          bilan_id: string;
-          cliche_id: string | null;
-          type: string;
-          valeur: number;
-          unite: 'deg' | 'cm' | 'px';
-          cree_le: string;
-          maj_le: string;
-        };
+          bilan_id: string
+          cliche_id: string | null
+          cree_le: string
+          id: string
+          maj_le: string
+          praticien_id: string
+          type: string
+          unite: string
+          valeur: number
+        }
         Insert: {
-          id?: string;
-          praticien_id: string;
-          bilan_id: string;
-          cliche_id?: string | null;
-          type: string;
-          valeur: number;
-          unite: 'deg' | 'cm' | 'px';
-        };
+          bilan_id: string
+          cliche_id?: string | null
+          cree_le?: string
+          id?: string
+          maj_le?: string
+          praticien_id: string
+          type: string
+          unite: string
+          valeur: number
+        }
         Update: {
-          valeur?: number;
-          unite?: 'deg' | 'cm' | 'px';
-        };
-        Relationships: [];
-      };
-    };
-    Views: Record<never, never>;
-    Functions: Record<never, never>;
+          bilan_id?: string
+          cliche_id?: string | null
+          cree_le?: string
+          id?: string
+          maj_le?: string
+          praticien_id?: string
+          type?: string
+          unite?: string
+          valeur?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mesures_bilan_id_praticien_id_fkey"
+            columns: ["bilan_id", "praticien_id"]
+            isOneToOne: false
+            referencedRelation: "bilans"
+            referencedColumns: ["id", "praticien_id"]
+          },
+          {
+            foreignKeyName: "mesures_cliche_id_praticien_id_fkey"
+            columns: ["cliche_id", "praticien_id"]
+            isOneToOne: false
+            referencedRelation: "cliches"
+            referencedColumns: ["id", "praticien_id"]
+          },
+          {
+            foreignKeyName: "mesures_praticien_id_fkey"
+            columns: ["praticien_id"]
+            isOneToOne: false
+            referencedRelation: "praticiens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          cree_le: string
+          date_naissance: string | null
+          id: string
+          maj_le: string
+          nom: string
+          notes: string
+          praticien_id: string
+          prenom: string
+        }
+        Insert: {
+          cree_le?: string
+          date_naissance?: string | null
+          id?: string
+          maj_le?: string
+          nom: string
+          notes?: string
+          praticien_id: string
+          prenom: string
+        }
+        Update: {
+          cree_le?: string
+          date_naissance?: string | null
+          id?: string
+          maj_le?: string
+          nom?: string
+          notes?: string
+          praticien_id?: string
+          prenom?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patients_praticien_id_fkey"
+            columns: ["praticien_id"]
+            isOneToOne: false
+            referencedRelation: "praticiens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      points: {
+        Row: {
+          cliche_id: string
+          code_point: string
+          id: string
+          maj_le: string
+          praticien_id: string
+          x: number
+          y: number
+        }
+        Insert: {
+          cliche_id: string
+          code_point: string
+          id?: string
+          maj_le?: string
+          praticien_id: string
+          x: number
+          y: number
+        }
+        Update: {
+          cliche_id?: string
+          code_point?: string
+          id?: string
+          maj_le?: string
+          praticien_id?: string
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_cliche_id_praticien_id_fkey"
+            columns: ["cliche_id", "praticien_id"]
+            isOneToOne: false
+            referencedRelation: "cliches"
+            referencedColumns: ["id", "praticien_id"]
+          },
+          {
+            foreignKeyName: "points_praticien_id_fkey"
+            columns: ["praticien_id"]
+            isOneToOne: false
+            referencedRelation: "praticiens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      praticiens: {
+        Row: {
+          cabinet: string
+          cree_le: string
+          echelle_px_par_cm: number | null
+          email: string
+          id: string
+          maj_le: string
+          nom: string
+        }
+        Insert: {
+          cabinet?: string
+          cree_le?: string
+          echelle_px_par_cm?: number | null
+          email: string
+          id: string
+          maj_le?: string
+          nom?: string
+        }
+        Update: {
+          cabinet?: string
+          cree_le?: string
+          echelle_px_par_cm?: number | null
+          email?: string
+          id?: string
+          maj_le?: string
+          nom?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
     Enums: {
-      vue_posturale: VuePosturale;
-    };
-    CompositeTypes: Record<never, never>;
-  };
-};
+      vue_posturale: "face" | "dos" | "profil"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
 
-export type Praticien = Database['public']['Tables']['praticiens']['Row'];
-export type Patient = Database['public']['Tables']['patients']['Row'];
-export type Bilan = Database['public']['Tables']['bilans']['Row'];
-export type Cliche = Database['public']['Tables']['cliches']['Row'];
-export type PointAnatomique = Database['public']['Tables']['points']['Row'];
-export type Mesure = Database['public']['Tables']['mesures']['Row'];
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      vue_posturale: ["face", "dos", "profil"],
+    },
+  },
+} as const

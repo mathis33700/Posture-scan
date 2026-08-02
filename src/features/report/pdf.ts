@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf';
 import type { Ecart } from '@/features/comparaison/ecarts';
 import { calculerAge, formaterDate } from '@/lib/format';
 import { formaterValeur, libelleNorme, type ResultatMesure } from '@/lib/measures';
-import type { Bilan, Patient, Praticien, VuePosturale } from '@/types/database';
+import type { Bilan, Patient, Praticien, VuePosturale } from '@/types/domaine';
 
 import type { ClicheRendu } from './rendu';
 

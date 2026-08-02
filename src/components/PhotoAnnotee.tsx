@@ -5,7 +5,7 @@ import {
   COULEUR_SEGMENT,
   type PositionsPoints,
 } from '@/lib/annotation-render';
-import type { VuePosturale } from '@/types/database';
+import type { VuePosturale } from '@/types/domaine';
 
 export type { PositionsPoints };
 

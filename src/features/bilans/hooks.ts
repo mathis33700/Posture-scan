@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePraticienId } from '@/features/auth/useAuth';
 import { supprimerPhotosSousPrefixe } from '@/lib/storage';
 import { supabase } from '@/lib/supabase';
-import type { Bilan } from '@/types/database';
+import type { Bilan } from '@/types/domaine';
 
 export const clesBilans = {
   parPatient: (praticienId: string, patientId: string) =>

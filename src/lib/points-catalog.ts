@@ -1,4 +1,4 @@
-import type { VuePosturale } from '@/types/database';
+import type { VuePosturale } from '@/types/domaine';
 
 /**
  * Catalogue des points anatomiques, défini en code et non en base.

@@ -1,4 +1,4 @@
-import type { VuePosturale } from '@/types/database';
+import type { VuePosturale } from '@/types/domaine';
 
 import {
   angleAvecHorizontale,

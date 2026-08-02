@@ -4,7 +4,7 @@ import {
   type MesureCalculee,
 } from '@/features/mesures/useMesuresCalculees';
 import { usePointsParCliche } from '@/features/points/hooks';
-import type { Cliche, PointAnatomique, VuePosturale } from '@/types/database';
+import type { Cliche, PointAnatomique, VuePosturale } from '@/types/domaine';
 
 export type DonneesBilan = {
   cliches: Cliche[];

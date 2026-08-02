@@ -82,6 +82,10 @@ Après toute migration ultérieure :
 npx supabase gen types typescript --project-id <ref-du-projet> > src/types/database.ts
 ```
 
+`src/types/database.ts` est **entièrement généré** et écrasé à chaque exécution : n'y écrivez
+rien. Le vocabulaire métier (`Patient`, `Bilan`, `Cliche`, `VuePosturale`…) vit à côté, dans
+`src/types/domaine.ts`, qui est le seul module de types que l'application importe.
+
 ## Développement local
 
 ```bash
@@ -207,7 +211,7 @@ src/
 │   └── report/        Rendu canvas et composition PDF
 ├── lib/               Logique pure : géométrie, mesures, catalogue, formats
 ├── pages/             Écrans routés
-└── types/             Types de la base
+└── types/             database.ts (généré) et domaine.ts (alias métier)
 ```
 
 Le cœur métier — `lib/geometry.ts`, `lib/measures.ts`, `features/comparaison/ecarts.ts` — est

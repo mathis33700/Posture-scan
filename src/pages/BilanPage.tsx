@@ -24,7 +24,7 @@ import { usePointsParCliche } from '@/features/points/hooks';
 import { usePraticien } from '@/features/praticien/usePraticien';
 import { dateDuJourSql } from '@/lib/format';
 import { nombrePointsAttendus } from '@/lib/points-catalog';
-import type { Bilan, VuePosturale } from '@/types/database';
+import type { Bilan, VuePosturale } from '@/types/domaine';
 
 export function BilanPage() {
   const { bilanId } = useParams<{ bilanId: string }>();

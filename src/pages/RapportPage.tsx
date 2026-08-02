@@ -16,7 +16,7 @@ import { usePatient } from '@/features/patients/hooks';
 import { usePraticien } from '@/features/praticien/usePraticien';
 import { rendreClicheAnnote } from '@/features/report/rendu';
 import { calculerAge, formaterDate } from '@/lib/format';
-import type { Bilan, Patient, Praticien } from '@/types/database';
+import type { Bilan, Patient, Praticien } from '@/types/domaine';
 
 export function RapportPage() {
   const { bilanId } = useParams<{ bilanId: string }>();

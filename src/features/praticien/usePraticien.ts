@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { usePraticienId } from '@/features/auth/useAuth';
 import { supabase } from '@/lib/supabase';
-import type { Praticien } from '@/types/database';
+import type { Praticien } from '@/types/domaine';
 
 export function clePraticien(id: string) {
   return ['praticien', id] as const;

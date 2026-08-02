@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePraticienId } from '@/features/auth/useAuth';
 import { supprimerPhotosSousPrefixe } from '@/lib/storage';
 import { supabase } from '@/lib/supabase';
-import type { Patient } from '@/types/database';
+import type { Patient } from '@/types/domaine';
 
 export const clesPatients = {
   tous: (praticienId: string) => ['patients', praticienId] as const,

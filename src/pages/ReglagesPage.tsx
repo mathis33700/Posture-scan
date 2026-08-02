@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Champ, Saisie } from '@/components/ui/Champ';
 import { BlocChargement } from '@/components/ui/Chargement';
 import { useMajPraticien, usePraticien } from '@/features/praticien/usePraticien';
-import type { Praticien } from '@/types/database';
+import type { Praticien } from '@/types/domaine';
 
 export function ReglagesPage() {
   const { data: praticien, isPending, error } = usePraticien();

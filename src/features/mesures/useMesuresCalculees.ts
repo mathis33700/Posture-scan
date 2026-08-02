@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 
 import { calculerMesures, type ResultatMesure } from '@/lib/measures';
-import type { Cliche, PointAnatomique } from '@/types/database';
+import type { Cliche, PointAnatomique } from '@/types/domaine';
 
 import { useRemplacerMesures } from './hooks';
 

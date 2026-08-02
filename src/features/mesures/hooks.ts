@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePraticienId } from '@/features/auth/useAuth';
 import type { ResultatMesure } from '@/lib/measures';
 import { supabase } from '@/lib/supabase';
-import type { Mesure } from '@/types/database';
+import type { Mesure } from '@/types/domaine';
 
 export const clesMesures = {
   parBilan: (praticienId: string, bilanId: string) =>

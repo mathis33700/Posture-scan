@@ -10,7 +10,7 @@ import {
   useSupprimerPoint,
 } from '@/features/points/hooks';
 import { pointsDeLaVue } from '@/lib/points-catalog';
-import type { Cliche, VuePosturale } from '@/types/database';
+import type { Cliche, VuePosturale } from '@/types/domaine';
 
 function estVue(valeur: string | undefined): valeur is VuePosturale {
   return VUES.includes(valeur as VuePosturale);

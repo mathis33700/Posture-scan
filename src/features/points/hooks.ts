@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { usePraticienId } from '@/features/auth/useAuth';
 import { supabase } from '@/lib/supabase';
-import type { PointAnatomique } from '@/types/database';
+import type { PointAnatomique } from '@/types/domaine';
 
 export const clesPoints = {
   parCliches: (praticienId: string, clicheIds: string[]) =>
