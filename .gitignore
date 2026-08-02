@@ -1,0 +1,19 @@
+node_modules
+dist
+dev-dist
+*.local
+.DS_Store
+
+# Variables d'environnement : ne jamais committer les clés du projet Supabase
+.env
+.env.*
+!.env.example
+
+# Éditeurs
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Logs
+npm-debug.log*
+yarn-error.log*
