@@ -17,8 +17,11 @@ import {
   useUrlsCliches,
   VUES,
 } from '@/features/cliches/hooks';
+import { TableauMesures } from '@/features/mesures/TableauMesures';
+import { useMesuresCalculees } from '@/features/mesures/useMesuresCalculees';
 import { usePatient } from '@/features/patients/hooks';
 import { usePointsParCliche } from '@/features/points/hooks';
+import { usePraticien } from '@/features/praticien/usePraticien';
 import { dateDuJourSql } from '@/lib/format';
 import { nombrePointsAttendus } from '@/lib/points-catalog';
 import type { Bilan, VuePosturale } from '@/types/database';
@@ -45,6 +48,15 @@ function ContenuBilan({ bilan }: { bilan: Bilan }) {
   const { data: urls } = useUrlsCliches(bilan.id, cliches);
   const clicheIds = (cliches ?? []).map((cliche) => cliche.id);
   const { data: pointsParCliche } = usePointsParCliche(clicheIds);
+  const { data: praticien } = usePraticien();
+
+  const mesures = useMesuresCalculees({
+    cliches,
+    pointsParCliche,
+    echelle: praticien?.echelle_px_par_cm ?? null,
+    bilanId: bilan.id,
+    synchroniser: true,
+  });
 
   const enregistrerCliche = useEnregistrerCliche({
     bilanId: bilan.id,
@@ -138,6 +150,21 @@ function ContenuBilan({ bilan }: { bilan: Bilan }) {
           {totalPointsPlaces} point{totalPointsPlaces > 1 ? 's' : ''} placé
           {totalPointsPlaces > 1 ? 's' : ''} sur {totalPointsAttendus}. Les mesures qui
           dépendent de points manquants ne sont pas calculées.
+        </Alerte>
+      )}
+
+      {mesures.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-medium">Mesures</h2>
+          <TableauMesures mesures={mesures} />
+        </section>
+      )}
+
+      {praticien && praticien.echelle_px_par_cm === null && (
+        <Alerte ton="info">
+          Le calibrage du cabinet n’est pas renseigné : seules les mesures angulaires sont
+          calculées. Renseignez-le dans les réglages pour obtenir aussi les déports en
+          centimètres.
         </Alerte>
       )}
 
