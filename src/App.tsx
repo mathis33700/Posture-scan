@@ -11,6 +11,7 @@ import { ConnexionPage } from '@/pages/ConnexionPage';
 import { MotDePassePage } from '@/pages/MotDePassePage';
 import { PatientPage } from '@/pages/PatientPage';
 import { PatientsPage } from '@/pages/PatientsPage';
+import { RapportPage } from '@/pages/RapportPage';
 import { ReglagesPage } from '@/pages/ReglagesPage';
 
 const queryClient = new QueryClient({
@@ -41,6 +42,7 @@ export function App() {
                 <Route path="/patients/:patientId/comparaison" element={<ComparaisonPage />} />
                 <Route path="/bilans/:bilanId" element={<BilanPage />} />
                 <Route path="/bilans/:bilanId/vues/:vue" element={<AnnotationPage />} />
+                <Route path="/bilans/:bilanId/rapport" element={<RapportPage />} />
                 <Route path="/reglages" element={<ReglagesPage />} />
                 <Route path="/mot-de-passe" element={<MotDePassePage />} />
               </Route>

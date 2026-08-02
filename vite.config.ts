@@ -48,6 +48,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    // Le socle (React, Supabase, TanStack Query) tient en ~550 ko bruts, soit
+    // ~155 ko une fois compressé. L'application étant installée en PWA et
+    // précachée, ce socle n'est téléchargé qu'une fois : le seuil par défaut de
+    // 500 ko n'apporte ici qu'un avertissement permanent en CI. jsPDF, lui, est
+    // bien tenu à l'écart et chargé à la demande depuis l'écran de rapport.
+    chunkSizeWarningLimit: 600,
+  },
   test: {
     environment: 'jsdom',
     globals: true,

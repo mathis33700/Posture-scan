@@ -4,6 +4,9 @@ dev-dist
 *.local
 .DS_Store
 
+# Cache incrémental de tsc
+*.tsbuildinfo
+
 # Variables d'environnement : ne jamais committer les clés du projet Supabase
 .env
 .env.*

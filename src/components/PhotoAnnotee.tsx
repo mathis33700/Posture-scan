@@ -1,7 +1,13 @@
-import { BASE_FIL_A_PLOMB, SEGMENTS_PAR_VUE } from '@/lib/points-catalog';
+import {
+  construireAnnotations,
+  COULEUR_PLOMB,
+  COULEUR_POINT,
+  COULEUR_SEGMENT,
+  type PositionsPoints,
+} from '@/lib/annotation-render';
 import type { VuePosturale } from '@/types/database';
 
-export type PositionsPoints = Map<string, { x: number; y: number }>;
+export type { PositionsPoints };
 
 /**
  * Photo avec ses repères, ses segments et son fil à plomb, en lecture seule.
@@ -26,23 +32,7 @@ export function PhotoAnnotee({
   opacite?: number;
   afficherReperes?: boolean;
 }) {
-  const enPixels = (code: string) => {
-    const point = positions.get(code);
-    return point ? { x: point.x * image.largeur, y: point.y * image.hauteur } : null;
-  };
-
-  const basesFilAPlomb = BASE_FIL_A_PLOMB[vue]
-    .map(enPixels)
-    .filter((point): point is { x: number; y: number } => point !== null);
-
-  const abscisseFilAPlomb =
-    basesFilAPlomb.length > 0
-      ? basesFilAPlomb.reduce((somme, point) => somme + point.x, 0) / basesFilAPlomb.length
-      : null;
-
-  // Le trait est proportionné à l'image pour rester lisible quelle que soit sa
-  // définition, du rendu écran à l'export PDF.
-  const epaisseur = Math.max(image.largeur, image.hauteur) / 400;
+  const annotations = construireAnnotations({ vue, positions, image });
 
   return (
     <div
@@ -57,48 +47,42 @@ export function PhotoAnnotee({
           className="pointer-events-none absolute inset-0 size-full"
           aria-hidden
         >
-          {abscisseFilAPlomb !== null && (
+          {annotations.abscisseFilAPlomb !== null && (
             <line
-              x1={abscisseFilAPlomb}
+              x1={annotations.abscisseFilAPlomb}
               y1={0}
-              x2={abscisseFilAPlomb}
+              x2={annotations.abscisseFilAPlomb}
               y2={image.hauteur}
-              stroke="#38bdf8"
-              strokeWidth={epaisseur}
-              strokeDasharray={`${epaisseur * 6} ${epaisseur * 4}`}
+              stroke={COULEUR_PLOMB}
+              strokeWidth={annotations.epaisseur}
+              strokeDasharray={`${annotations.epaisseur * 6} ${annotations.epaisseur * 4}`}
               opacity={0.8}
             />
           )}
 
-          {SEGMENTS_PAR_VUE[vue].map(([codeA, codeB]) => {
-            const a = enPixels(codeA);
-            const b = enPixels(codeB);
-            if (!a || !b) return null;
+          {annotations.segments.map((segment) => (
+            <line
+              key={segment.cle}
+              x1={segment.a.x}
+              y1={segment.a.y}
+              x2={segment.b.x}
+              y2={segment.b.y}
+              stroke={COULEUR_SEGMENT}
+              strokeWidth={annotations.epaisseur * 1.6}
+              strokeLinecap="round"
+              opacity={0.9}
+            />
+          ))}
 
-            return (
-              <line
-                key={`${codeA}-${codeB}`}
-                x1={a.x}
-                y1={a.y}
-                x2={b.x}
-                y2={b.y}
-                stroke="#f8fafc"
-                strokeWidth={epaisseur * 1.6}
-                strokeLinecap="round"
-                opacity={0.9}
-              />
-            );
-          })}
-
-          {[...positions.entries()].map(([code, point]) => (
+          {annotations.points.map((point) => (
             <circle
-              key={code}
-              cx={point.x * image.largeur}
-              cy={point.y * image.hauteur}
-              r={epaisseur * 2.4}
-              fill="#0ea5e9"
+              key={point.cle}
+              cx={point.position.x}
+              cy={point.position.y}
+              r={annotations.epaisseur * 2.4}
+              fill={COULEUR_POINT}
               stroke="#ffffff"
-              strokeWidth={epaisseur * 0.8}
+              strokeWidth={annotations.epaisseur * 0.8}
             />
           ))}
         </svg>
