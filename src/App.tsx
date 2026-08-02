@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/AppLayout';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
+import { AnnotationPage } from '@/pages/AnnotationPage';
 import { BilanPage } from '@/pages/BilanPage';
 import { ConnexionPage } from '@/pages/ConnexionPage';
 import { MotDePassePage } from '@/pages/MotDePassePage';
@@ -37,6 +38,7 @@ export function App() {
                 <Route path="/patients" element={<PatientsPage />} />
                 <Route path="/patients/:patientId" element={<PatientPage />} />
                 <Route path="/bilans/:bilanId" element={<BilanPage />} />
+                <Route path="/bilans/:bilanId/vues/:vue" element={<AnnotationPage />} />
                 <Route path="/reglages" element={<ReglagesPage />} />
                 <Route path="/mot-de-passe" element={<MotDePassePage />} />
               </Route>
