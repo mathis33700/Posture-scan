@@ -34,6 +34,7 @@ export function useCliches(bilanId: string) {
       if (error) throw error;
       return data;
     },
+    enabled: bilanId !== '',
   });
 }
 

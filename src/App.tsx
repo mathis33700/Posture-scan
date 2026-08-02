@@ -6,6 +6,7 @@ import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { AnnotationPage } from '@/pages/AnnotationPage';
 import { BilanPage } from '@/pages/BilanPage';
+import { ComparaisonPage } from '@/pages/ComparaisonPage';
 import { ConnexionPage } from '@/pages/ConnexionPage';
 import { MotDePassePage } from '@/pages/MotDePassePage';
 import { PatientPage } from '@/pages/PatientPage';
@@ -37,6 +38,7 @@ export function App() {
                 <Route index element={<Navigate to="/patients" replace />} />
                 <Route path="/patients" element={<PatientsPage />} />
                 <Route path="/patients/:patientId" element={<PatientPage />} />
+                <Route path="/patients/:patientId/comparaison" element={<ComparaisonPage />} />
                 <Route path="/bilans/:bilanId" element={<BilanPage />} />
                 <Route path="/bilans/:bilanId/vues/:vue" element={<AnnotationPage />} />
                 <Route path="/reglages" element={<ReglagesPage />} />

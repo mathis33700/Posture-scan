@@ -138,6 +138,48 @@ export const CATALOGUE_POINTS: Record<VuePosturale, readonly DefinitionPoint[]> 
   profil: POINTS_PROFIL,
 };
 
+/**
+ * Segments tracés entre les points sur une photo annotée.
+ *
+ * Purement illustratif : ces traits rendent la posture lisible d'un coup d'œil
+ * sur le rapport et la comparaison, mais aucune mesure n'en dépend — celles-ci
+ * sont calculées directement à partir des points.
+ */
+export const SEGMENTS_PAR_VUE: Record<VuePosturale, readonly (readonly [string, string])[]> = {
+  face: [
+    ['tragus_gauche', 'tragus_droit'],
+    ['acromion_gauche', 'acromion_droit'],
+    ['eias_gauche', 'eias_droit'],
+    ['genou_gauche', 'genou_droit'],
+    ['malleole_gauche', 'malleole_droite'],
+  ],
+  dos: [
+    ['acromion_gauche', 'acromion_droit'],
+    ['scapula_gauche', 'scapula_droit'],
+    ['eips_gauche', 'eips_droit'],
+    ['c7', 'pli_fessier'],
+    ['malleole_gauche', 'malleole_droite'],
+  ],
+  profil: [
+    ['tragus', 'c7'],
+    ['c7', 'acromion'],
+    ['acromion', 'grand_trochanter'],
+    ['eias', 'eips'],
+    ['grand_trochanter', 'condyle_femoral'],
+    ['condyle_femoral', 'malleole_laterale'],
+  ],
+};
+
+/**
+ * Points servant de base au fil à plomb de chaque vue : la verticale de
+ * référence part de leur milieu.
+ */
+export const BASE_FIL_A_PLOMB: Record<VuePosturale, readonly string[]> = {
+  face: ['malleole_gauche', 'malleole_droite'],
+  dos: ['malleole_gauche', 'malleole_droite'],
+  profil: ['malleole_laterale'],
+};
+
 export function pointsDeLaVue(vue: VuePosturale): readonly DefinitionPoint[] {
   return CATALOGUE_POINTS[vue];
 }
