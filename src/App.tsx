@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/AppLayout';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
+import { BilanPage } from '@/pages/BilanPage';
 import { ConnexionPage } from '@/pages/ConnexionPage';
 import { MotDePassePage } from '@/pages/MotDePassePage';
 import { PatientPage } from '@/pages/PatientPage';
@@ -35,6 +36,7 @@ export function App() {
                 <Route index element={<Navigate to="/patients" replace />} />
                 <Route path="/patients" element={<PatientsPage />} />
                 <Route path="/patients/:patientId" element={<PatientPage />} />
+                <Route path="/bilans/:bilanId" element={<BilanPage />} />
                 <Route path="/reglages" element={<ReglagesPage />} />
                 <Route path="/mot-de-passe" element={<MotDePassePage />} />
               </Route>
