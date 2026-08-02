@@ -6,6 +6,7 @@ import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { ConnexionPage } from '@/pages/ConnexionPage';
 import { MotDePassePage } from '@/pages/MotDePassePage';
+import { PatientPage } from '@/pages/PatientPage';
 import { PatientsPage } from '@/pages/PatientsPage';
 import { ReglagesPage } from '@/pages/ReglagesPage';
 
@@ -33,6 +34,7 @@ export function App() {
               <Route element={<AppLayout />}>
                 <Route index element={<Navigate to="/patients" replace />} />
                 <Route path="/patients" element={<PatientsPage />} />
+                <Route path="/patients/:patientId" element={<PatientPage />} />
                 <Route path="/reglages" element={<ReglagesPage />} />
                 <Route path="/mot-de-passe" element={<MotDePassePage />} />
               </Route>
