@@ -143,9 +143,14 @@ Le déploiement peut aussi se faire à la main depuis un poste authentifié (`wr
 npm run deploy
 ```
 
-Un déploiement sur **Cloudflare Pages** reste possible sans rien changer : commande de build
-`npm run build`, répertoire de sortie `dist`. Le fichier `public/_redirects` y assure le
-même repli vers `index.html` que `not_found_handling` côté Workers.
+Le dépôt ne contient volontairement **pas de `public/_redirects`**. Workers lit ce fichier et
+rejette la règle habituelle `/* /index.html 200` : il retire déjà `/index` et `.html` de
+lui-même, si bien que la règle se redéclencherait indéfiniment et le déploiement échoue sur
+`Infinite loop detected`. Le repli SPA est assuré par `not_found_handling`, qui suffit.
+
+Pour un déploiement sur **Cloudflare Pages** — commande de build `npm run build`, répertoire
+de sortie `dist` — il faudrait en revanche recréer ce `public/_redirects`, Pages n'ayant pas
+d'équivalent de `not_found_handling`.
 
 Pensez enfin à ajouter l'URL de production dans **Authentication → URL Configuration** côté
 Supabase (Site URL et Redirect URLs), faute de quoi les liens de réinitialisation de mot de
