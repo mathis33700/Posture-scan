@@ -11,7 +11,7 @@ Installable sur iPhone et tablette via « Ajouter à l'écran d'accueil ».
 - [Stack](#stack)
 - [Mise en place de Supabase](#mise-en-place-de-supabase)
 - [Développement local](#développement-local)
-- [Déploiement sur Cloudflare Pages](#déploiement-sur-cloudflare-pages)
+- [Déploiement sur Cloudflare](#déploiement-sur-cloudflare)
 - [Calibrage du cabinet](#calibrage-du-cabinet)
 - [Sécurité et données de santé](#sécurité-et-données-de-santé)
 - [Modèle de données](#modèle-de-données)
@@ -29,7 +29,7 @@ Installable sur iPhone et tablette via « Ajouter à l'écran d'accueil ».
 | PWA         | `vite-plugin-pwa`                                                 |
 | PDF         | jsPDF, chargé à la demande                                        |
 | Tests       | Vitest                                                            |
-| Hébergement | Cloudflare Pages                                                  |
+| Hébergement | Cloudflare Workers (assets statiques)                             |
 
 Vercel est écarté volontairement : son offre gratuite interdit l'usage commercial, ce qui
 s'applique à un outil de cabinet.
