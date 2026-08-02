@@ -119,19 +119,33 @@ clé `service_role`, elle, ne doit **jamais** apparaître dans ce dépôt ni dan
 
 Les icônes PWA se régénèrent avec `node scripts/generate-icons.mjs`.
 
-## Déploiement sur Cloudflare Pages
+## Déploiement sur Cloudflare
 
-| Réglage              | Valeur          |
-| -------------------- | --------------- |
-| Commande de build    | `npm run build` |
-| Répertoire de sortie | `dist`          |
-| Version de Node      | 22              |
+Le dépôt est configuré pour **Cloudflare Workers** via `wrangler.jsonc` : application
+purement statique, sans code serveur, avec `not_found_handling` en mode
+`single-page-application` pour que le routage côté navigateur survive à un rechargement sur
+`/patients/…`.
 
-Déclarez `VITE_SUPABASE_URL` et `VITE_SUPABASE_PUBLISHABLE_KEY` dans les variables
-d'environnement du projet Pages.
+| Réglage            | Valeur                |
+| ------------------ | --------------------- |
+| Commande de build  | `npm run build`       |
+| Commande de deploy | `npx wrangler deploy` |
+| Version de Node    | 22                    |
 
-Le fichier `public/_redirects` renvoie toutes les routes vers `index.html`, sans quoi un
-rechargement sur `/patients/…` renverrait une 404.
+**Les deux variables doivent être déclarées comme variables de _build_**, pas comme
+variables d'exécution. Vite les inline dans le bundle au moment de la compilation : une
+variable fournie seulement à l'exécution ne sera jamais lue, et l'application s'arrêtera sur
+« Configuration Supabase absente ».
+
+Le déploiement peut aussi se faire à la main depuis un poste authentifié (`wrangler login`) :
+
+```bash
+npm run deploy
+```
+
+Un déploiement sur **Cloudflare Pages** reste possible sans rien changer : commande de build
+`npm run build`, répertoire de sortie `dist`. Le fichier `public/_redirects` y assure le
+même repli vers `index.html` que `not_found_handling` côté Workers.
 
 Pensez enfin à ajouter l'URL de production dans **Authentication → URL Configuration** côté
 Supabase (Site URL et Redirect URLs), faute de quoi les liens de réinitialisation de mot de

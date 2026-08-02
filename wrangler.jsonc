@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "posture-scan",
+  "compatibility_date": "2026-08-02",
+
+  // Application entièrement statique : pas de champ `main`, donc pas de code
+  // serveur. Cloudflare se contente de servir le résultat de `npm run build`.
+  "assets": {
+    "directory": "./dist",
+
+    // Le routage est géré côté navigateur par React Router. Sans ceci, ouvrir
+    // ou recharger directement une adresse comme /patients/123 renverrait une
+    // 404 : le fichier n'existe pas sur le disque, seul index.html le connaît.
+    "not_found_handling": "single-page-application",
+  },
+
+  "observability": {
+    "enabled": true,
+  },
+}
