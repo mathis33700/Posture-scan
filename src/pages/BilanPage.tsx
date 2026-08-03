@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Champ, Saisie, ZoneTexte } from '@/components/ui/Champ';
 import { BlocChargement } from '@/components/ui/Chargement';
 import { ConfirmationSuppression } from '@/components/ui/ConfirmationSuppression';
+import { IndicateurEnregistrement } from '@/components/ui/IndicateurEnregistrement';
 import { useBilan, useMajBilan, useSupprimerBilan } from '@/features/bilans/hooks';
 import { CarteVue } from '@/features/cliches/CarteVue';
 import {
@@ -93,6 +94,17 @@ function ContenuBilan({ bilan }: { bilan: Bilan }) {
         <div>
           <h1 className="text-xl font-semibold">Bilan postural</h1>
           {patient && <ResumePatient patient={patient} />}
+          {/* Aucun bouton de validation nulle part : autant le dire. */}
+          <IndicateurEnregistrement
+            className="mt-1"
+            etat={
+              enregistrerCliche.isPending || supprimerCliche.isPending
+                ? 'en-cours'
+                : enregistrerCliche.isError || supprimerCliche.isError
+                  ? 'erreur'
+                  : 'enregistre'
+            }
+          />
         </div>
         <div className="flex gap-2">
           {cliches && cliches.length > 0 && (

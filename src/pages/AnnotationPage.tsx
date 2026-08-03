@@ -1,7 +1,8 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { Alerte } from '@/components/ui/Alerte';
 import { BlocChargement } from '@/components/ui/Chargement';
+import type { EtatEnregistrement } from '@/components/ui/IndicateurEnregistrement';
 import { EditeurPoints, type Position } from '@/features/annotation/EditeurPoints';
 import { LIBELLE_VUE, useCliches, useUrlsCliches, VUES } from '@/features/cliches/hooks';
 import {
@@ -60,10 +61,18 @@ function ContenuAnnotation({
   cliche: Cliche;
   url: string;
 }) {
+  const navigate = useNavigate();
   const clicheIds = [cliche.id];
   const { data: pointsParCliche, isPending } = usePointsParCliche(clicheIds);
   const enregistrerPoint = useEnregistrerPoint(clicheIds);
   const supprimerPoint = useSupprimerPoint(clicheIds);
+
+  const etatEnregistrement: EtatEnregistrement =
+    enregistrerPoint.isPending || supprimerPoint.isPending
+      ? 'en-cours'
+      : enregistrerPoint.isError || supprimerPoint.isError
+        ? 'erreur'
+        : 'enregistre';
 
   if (isPending) return <BlocChargement />;
 
@@ -99,8 +108,11 @@ function ContenuAnnotation({
         key={cliche.id}
         url={url}
         image={{ largeur: cliche.image_largeur, hauteur: cliche.image_hauteur }}
+        vue={vue}
         definitions={pointsDeLaVue(vue)}
         positionsInitiales={positionsInitiales}
+        etatEnregistrement={etatEnregistrement}
+        onTerminer={() => navigate(`/bilans/${bilanId}`)}
         onEnregistrer={(code, position) =>
           enregistrerPoint.mutate({
             clicheId: cliche.id,

@@ -1,8 +1,18 @@
 import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
+import {
+  IndicateurEnregistrement,
+  type EtatEnregistrement,
+} from '@/components/ui/IndicateurEnregistrement';
+import {
+  construireAnnotations,
+  COULEUR_PLOMB,
+  COULEUR_SEGMENT,
+} from '@/lib/annotation-render';
 import { cn } from '@/lib/cn';
 import type { DefinitionPoint } from '@/lib/points-catalog';
+import type { VuePosturale } from '@/types/domaine';
 
 import { calculerFit } from './fit';
 import { Loupe } from './Loupe';
@@ -19,17 +29,23 @@ type Annulation = { code: string; precedent: Position | null };
 export function EditeurPoints({
   url,
   image,
+  vue,
   definitions,
   positionsInitiales,
+  etatEnregistrement,
   onEnregistrer,
   onEffacer,
+  onTerminer,
 }: {
   url: string;
   image: { largeur: number; hauteur: number };
+  vue: VuePosturale;
   definitions: readonly DefinitionPoint[];
   positionsInitiales: Map<string, Position>;
+  etatEnregistrement: EtatEnregistrement;
   onEnregistrer: (code: string, position: Position) => void;
   onEffacer: (code: string) => void;
+  onTerminer: () => void;
 }) {
   const conteneur = useRef<HTMLDivElement>(null);
   const cadre = useRef<HTMLDivElement>(null);
@@ -45,6 +61,7 @@ export function EditeurPoints({
   );
   const [pileAnnulation, setPileAnnulation] = useState<Annulation[]>([]);
   const [loupe, setLoupe] = useState<Position | null>(null);
+  const [afficherLignes, setAfficherLignes] = useState(true);
 
   const taille = useTailleElement(conteneur);
   const fit = calculerFit(taille, image);
@@ -52,6 +69,17 @@ export function EditeurPoints({
     usePanZoom();
 
   const placés = definitions.filter((d) => positions.has(d.code)).length;
+  const complet = placés === definitions.length;
+
+  // Tracés calculés sur l'état local, donc redessinés pendant le glissement :
+  // la bascule d'épaules se voit s'incliner en direct, sans attendre le rapport.
+  // Même calcul que l'aperçu et le PDF, pour que les trois montrent la même chose.
+  const annotations = construireAnnotations({ vue, positions, image });
+
+  // Les traits sont exprimés dans le repère pixel du cliché, lui-même agrandi
+  // par le zoom : on divise par l'échelle pour qu'ils gardent la même finesse
+  // à l'écran, comme les repères.
+  const epaisseurTrait = annotations.epaisseur / transformation.echelle;
 
   function versNormalise(clientX: number, clientY: number): Position {
     // Le rectangle du cadre intègre déjà la transformation courante : inutile
@@ -252,6 +280,41 @@ export function EditeurPoints({
               className="pointer-events-none size-full"
             />
 
+            {afficherLignes && (
+              <svg
+                viewBox={`0 0 ${image.largeur} ${image.hauteur}`}
+                className="pointer-events-none absolute inset-0 size-full"
+                aria-hidden
+              >
+                {annotations.abscisseFilAPlomb !== null && (
+                  <line
+                    x1={annotations.abscisseFilAPlomb}
+                    y1={0}
+                    x2={annotations.abscisseFilAPlomb}
+                    y2={image.hauteur}
+                    stroke={COULEUR_PLOMB}
+                    strokeWidth={epaisseurTrait}
+                    strokeDasharray={`${epaisseurTrait * 6} ${epaisseurTrait * 4}`}
+                    opacity={0.75}
+                  />
+                )}
+
+                {annotations.segments.map((segment) => (
+                  <line
+                    key={segment.cle}
+                    x1={segment.a.x}
+                    y1={segment.a.y}
+                    x2={segment.b.x}
+                    y2={segment.b.y}
+                    stroke={COULEUR_SEGMENT}
+                    strokeWidth={epaisseurTrait * 1.4}
+                    strokeLinecap="round"
+                    opacity={0.75}
+                  />
+                ))}
+              </svg>
+            )}
+
             {definitions.map((definition) => {
               const position = positions.get(definition.code);
               if (!position) return null;
@@ -293,6 +356,23 @@ export function EditeurPoints({
 
           <div className="absolute right-3 bottom-3 flex gap-1.5">
             <BoutonZoom
+              libelle={afficherLignes ? 'Masquer les lignes' : 'Afficher les lignes'}
+              onClick={() => setAfficherLignes((visible) => !visible)}
+              desactive={false}
+              actif={afficherLignes}
+            >
+              {/* Les lignes aident à lire la posture, mais peuvent masquer le
+                  repère anatomique que l'on cherche à viser : on peut les ôter. */}
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor">
+                <path
+                  d="M4 8h16M4 16h16"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  transform="rotate(-8 12 12)"
+                />
+              </svg>
+            </BoutonZoom>
+            <BoutonZoom
               libelle="Dézoomer"
               onClick={() =>
                 zoomer(1 / 1.4, taille.largeur / 2 - fit.left, taille.hauteur / 2 - fit.top)
@@ -320,11 +400,20 @@ export function EditeurPoints({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-ardoise-500 text-sm">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span
+            className={cn(
+              'text-sm font-medium',
+              complet ? 'text-emerald-600' : 'text-ardoise-500'
+            )}
+          >
             {placés}/{definitions.length} points placés
           </span>
+
+          <IndicateurEnregistrement etat={etatEnregistrement} />
+
           <span className="grow" />
+
           <Button
             variante="secondaire"
             taille="sm"
@@ -338,6 +427,13 @@ export function EditeurPoints({
               Effacer ce point
             </Button>
           )}
+
+          {/* Rien n'est à valider — tout est déjà enregistré. Ce bouton ne sert
+              qu'à clore le geste et à ramener au bilan : sans lui, on cherche
+              instinctivement un « Valider » qui n'existe pas. */}
+          <Button taille="sm" onClick={onTerminer}>
+            Terminer
+          </Button>
         </div>
       </div>
 
@@ -355,8 +451,10 @@ function BoutonZoom({
   libelle,
   onClick,
   desactive,
+  actif = false,
   children,
 }: {
+  actif?: boolean;
   libelle: string;
   onClick: () => void;
   desactive: boolean;
@@ -366,12 +464,16 @@ function BoutonZoom({
     <button
       type="button"
       aria-label={libelle}
+      aria-pressed={actif}
       onClick={onClick}
       disabled={desactive}
       // Le conteneur capte les pointeurs : sans cela, appuyer sur le bouton
       // poserait aussi un point derrière lui.
       onPointerDown={(e) => e.stopPropagation()}
-      className="text-ardoise-800 grid size-9 place-items-center rounded-lg bg-white/90 text-lg shadow disabled:opacity-40"
+      className={cn(
+        'grid size-9 place-items-center rounded-lg text-lg shadow disabled:opacity-40',
+        actif ? 'bg-accent-600 text-white' : 'text-ardoise-800 bg-white/90'
+      )}
     >
       {children}
     </button>
