@@ -34,8 +34,8 @@ export class LimiteErreur extends Component<Props, State> {
     return (
       <EcranErreur titre="Une erreur est survenue" detail={this.state.erreur.message}>
         <p>
-          L’application s’est arrêtée de façon inattendue. Vos données enregistrées ne sont
-          pas touchées.
+          L’application s’est arrêtée de façon inattendue. Vos données enregistrées ne sont pas
+          touchées.
         </p>
         <p>
           Rechargez la page pour reprendre. Si le problème se répète toujours au même endroit,
