@@ -138,6 +138,14 @@ function ContenuBilan({ bilan }: { bilan: Bilan }) {
               vue={vue}
               cliche={cliche}
               url={cliche ? urls?.get(cliche.photo_path) : undefined}
+              positions={
+                new Map(
+                  (cliche ? (pointsParCliche?.get(cliche.id) ?? []) : []).map((point) => [
+                    point.code_point,
+                    { x: point.x, y: point.y },
+                  ])
+                )
+              }
               bilanId={bilan.id}
               enCours={enregistrerCliche.isPending && vueEnCours === vue}
               nombrePointsPlaces={cliche ? (pointsParCliche?.get(cliche.id)?.length ?? 0) : 0}
