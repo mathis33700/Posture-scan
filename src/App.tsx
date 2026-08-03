@@ -2,8 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppLayout } from '@/components/AppLayout';
+import { EcranErreur } from '@/components/EcranErreur';
+import { LimiteErreur } from '@/components/LimiteErreur';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
+import { configurationManquante } from '@/lib/supabase';
 import { AnnotationPage } from '@/pages/AnnotationPage';
 import { BilanPage } from '@/pages/BilanPage';
 import { ComparaisonPage } from '@/pages/ComparaisonPage';
@@ -27,31 +30,55 @@ const queryClient = new QueryClient({
 });
 
 export function App() {
+  // Les variables sont écrites en dur dans le bundle au moment de la
+  // compilation : si elles manquent ici, c'est qu'elles n'ont pas été fournies
+  // au build, et aucun réglage a posteriori ne les fera apparaître.
+  if (configurationManquante) {
+    return (
+      <EcranErreur titre="Configuration absente">
+        <p>
+          L’application ne sait pas à quelle base se connecter : <code>VITE_SUPABASE_URL</code>{' '}
+          et <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> n’ont pas été fournies.
+        </p>
+        <p>
+          En local, elles se déclarent dans un fichier <code>.env.local</code>. En ligne, elles
+          doivent être des variables <strong>de build</strong> et non d’exécution, puis le site
+          doit être redéployé.
+        </p>
+      </EcranErreur>
+    );
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/connexion" element={<ConnexionPage />} />
+    <LimiteErreur>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/connexion" element={<ConnexionPage />} />
 
-            <Route element={<ProtectedRoute />}>
-              <Route element={<AppLayout />}>
-                <Route index element={<Navigate to="/patients" replace />} />
-                <Route path="/patients" element={<PatientsPage />} />
-                <Route path="/patients/:patientId" element={<PatientPage />} />
-                <Route path="/patients/:patientId/comparaison" element={<ComparaisonPage />} />
-                <Route path="/bilans/:bilanId" element={<BilanPage />} />
-                <Route path="/bilans/:bilanId/vues/:vue" element={<AnnotationPage />} />
-                <Route path="/bilans/:bilanId/rapport" element={<RapportPage />} />
-                <Route path="/reglages" element={<ReglagesPage />} />
-                <Route path="/mot-de-passe" element={<MotDePassePage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AppLayout />}>
+                  <Route index element={<Navigate to="/patients" replace />} />
+                  <Route path="/patients" element={<PatientsPage />} />
+                  <Route path="/patients/:patientId" element={<PatientPage />} />
+                  <Route
+                    path="/patients/:patientId/comparaison"
+                    element={<ComparaisonPage />}
+                  />
+                  <Route path="/bilans/:bilanId" element={<BilanPage />} />
+                  <Route path="/bilans/:bilanId/vues/:vue" element={<AnnotationPage />} />
+                  <Route path="/bilans/:bilanId/rapport" element={<RapportPage />} />
+                  <Route path="/reglages" element={<ReglagesPage />} />
+                  <Route path="/mot-de-passe" element={<MotDePassePage />} />
+                </Route>
               </Route>
-            </Route>
 
-            <Route path="*" element={<Navigate to="/patients" replace />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+              <Route path="*" element={<Navigate to="/patients" replace />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </LimiteErreur>
   );
 }
